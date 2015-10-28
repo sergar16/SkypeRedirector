@@ -17,8 +17,8 @@ public class Test {
 
     public static void main(String[] ar) {
         try {
-            String username = "sergar16";
-            String password = "504387t";
+            String username = "***";
+            String password = "***";
             Skype skype = Skype.login(username, password);
             for (Chat chat :skype.getAllChats()){
                 System.out.println("===============================================================");
