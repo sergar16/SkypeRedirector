@@ -15,9 +15,7 @@ public class IO {
      JFileChooser fileChooser=new JFileChooser();
        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
            File file = fileChooser.getSelectedFile();
-           // load from file
-          return (ArrayList<RedirectRecord>)Serializer.unSerializeObject(file);
-
+          return Serializer.unSerializeObject(file);
        }
     return  null;}
 

@@ -2,7 +2,6 @@ package utils;
 
 import model.RedirectRecord;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -38,7 +37,7 @@ public class Serializer {
         if (in.exists()) {
             try (FileInputStream fis = new FileInputStream(in);
                  ObjectInputStream oos = new ObjectInputStream(fis)) {
-                return ( ArrayList<RedirectRecord>) oos.readObject();
+                return (ArrayList<RedirectRecord>) oos.readObject();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -17,8 +17,4 @@ public class Encoder {
         }
         return null;
     }
-
-
-
-
 }

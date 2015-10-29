@@ -24,12 +24,6 @@ public class ComboBoxAutocomplete {
     public static void complete(final JComboBox jComboBox,final String pattern) {
         DefaultComboBoxModel model = new DefaultComboBoxModel( lookupItem(pattern).toArray() );
         jComboBox.setModel( model );
-//        //delete not existing elements in itemsToShow
-//        allAvailableItems.
-//                stream().filter(comboboxItem -> !itemsToShow.contains(comboboxItem))
-//                .forEach(jComboBox::removeItem);
-
-
     }
 
 
