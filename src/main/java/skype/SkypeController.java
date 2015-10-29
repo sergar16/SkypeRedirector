@@ -11,6 +11,7 @@ import com.samczsun.skype4j.exceptions.SkypeException;
 import com.samczsun.skype4j.formatting.Message;
 import com.samczsun.skype4j.user.User;
 import model.ComboboxItem;
+import model.RedirectRecord;
 import redirect.Redirector;
 import utils.Encoder;
 
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
  * Created by Serhii on 10/25/2015.
  */
 public class SkypeController {
+
     private static Skype skype;
     private static SkypeController instance = null;
 
@@ -65,6 +67,7 @@ public class SkypeController {
                 @EventHandler
                 public void onMessage(MessageReceivedEvent e) {
                     Redirector.redirect(e);
+                    Redirector.redirectBack(e);
                 }
             });
             skype.subscribe();
