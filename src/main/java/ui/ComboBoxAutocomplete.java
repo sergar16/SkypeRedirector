@@ -14,6 +14,7 @@ public class ComboBoxAutocomplete {
 
     public static ArrayList<ComboboxItem> lookupItem(String pattern) {
         // iterate over all items
+        //TODO ignore case
       return   SkypeController.getSortedListOfGroupAndUsers()
                 .stream()
                 .filter(comboboxItem -> comboboxItem.toString().startsWith(pattern))

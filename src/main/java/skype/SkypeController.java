@@ -12,7 +12,9 @@ import com.samczsun.skype4j.formatting.Message;
 import com.samczsun.skype4j.user.User;
 import model.ComboboxItem;
 import redirect.Redirector;
+import utils.Encoder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -85,6 +87,7 @@ public class SkypeController {
         }
     }
 
+
     public Collection<Chat> getAllChats() {
         return skype.getAllChats();
     }
@@ -110,8 +113,13 @@ public class SkypeController {
     private String getIndividualChatName(final Chat chat) {
         if (chat instanceof IndividualChat) {
             IndividualChat individualChat = (IndividualChat) chat;
-            return ((User) chat.getAllUsers().toArray()[0]).getUsername().equals(getCurrentUsername())
-                    ? ((User) chat.getAllUsers().toArray()[1]).getUsername() : ((User) chat.getAllUsers().toArray()[0]).getUsername();
+            String name=((User) chat.getAllUsers().toArray()[0]).getUsername().equals(getCurrentUsername())
+                    ? ((User) chat.getAllUsers().toArray()[1]).getDisplayName() : ((User) chat.getAllUsers().toArray()[0]).getDisplayName();
+            if (name==null){
+               name= ((User) chat.getAllUsers().toArray()[0]).getUsername().equals(getCurrentUsername())
+                        ? ((User) chat.getAllUsers().toArray()[1]).getUsername() : ((User) chat.getAllUsers().toArray()[0]).getUsername();
+            }
+            return name;
         }
         return null;
     }
@@ -159,6 +167,7 @@ public class SkypeController {
                 e1.toString().compareTo(e2.toString());
         return getInstance().getAllChats().stream()
                 .map(chat -> new ComboboxItem(chat))
+                .distinct()
                 .sorted(byName).collect(Collectors.toCollection(ArrayList::new));
     }
 
