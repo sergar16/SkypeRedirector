@@ -30,7 +30,6 @@ public class SkypeController {
     private static Skype skype;
     private static SkypeController instance = null;
 
-
     private SkypeController() {
     }
 
@@ -52,18 +51,6 @@ public class SkypeController {
 
     }
 
-    public static void main(String[] a) {
-        SkypeController skypeController = new SkypeController();
-        skypeController.getAllGroupChats().forEach(chat -> {
-            System.out.println(((GroupChat) chat).getTopic());
-        });
-        skypeController.getAllIndividualChats().forEach(chat -> {
-            System.out.println(((IndividualChat) chat).getIdentity());
-        });
-        skypeController.getUsers().stream().forEach(user -> System.out.println(user.getUsername()));
-        Message message = Message.create();
-    }
-
     public static void signIn(final String username, final String password) throws Exception {
         skype = Skype.login(username, password);
     }
@@ -71,7 +58,6 @@ public class SkypeController {
     public static void logout() throws IOException {
         skype.logout();
     }
-
 
     public void addRedirectEventListener() {
         try {
@@ -113,44 +99,18 @@ public class SkypeController {
     private String getIndividualChatName(final Chat chat) {
         if (chat instanceof IndividualChat) {
             IndividualChat individualChat = (IndividualChat) chat;
-            String name=((User) chat.getAllUsers().toArray()[0]).getUsername().equals(getCurrentUsername())
-                    ? ((User) chat.getAllUsers().toArray()[1]).getDisplayName() : ((User) chat.getAllUsers().toArray()[0]).getDisplayName();
-            if (name==null){
-               name= ((User) chat.getAllUsers().toArray()[0]).getUsername().equals(getCurrentUsername())
+              return  ((User) chat.getAllUsers().toArray()[0]).getUsername().equals(getCurrentUsername())
                         ? ((User) chat.getAllUsers().toArray()[1]).getUsername() : ((User) chat.getAllUsers().toArray()[0]).getUsername();
             }
-            return name;
-        }
         return null;
     }
 
     public Chat findChatByName(final String name) {
-        Chat find = null;
-        for (Chat chat : getAllChats()) {
-            try {
-                if (getChatName(chat).equals(name)) {
-                    find = chat;
-                    break;
-                }
-            } catch (ClassCastException cce) {
-            }
-        }
-        return find;
+       return getAllChats().stream().filter(chat -> getChatName(chat).equals(name)).findAny().get();
     }
 
     public Chat findGroupChatByTopic(final String topic) {
-        //return getAllGroupChats().stream().filter(chat -> ((GroupChat)chat).getTopic().equals(topic)).findAny().get();
-        Chat find = null;
-        for (Chat chat : getAllGroupChats()) {
-            try {
-                if (((GroupChat) chat).getTopic().equals(topic)) {
-                    find = chat;
-                    break;
-                }
-            } catch (ClassCastException cce) {
-            }
-        }
-        return find;
+        return getAllGroupChats().stream().filter(chat -> ((GroupChat) chat).getTopic().equals(topic)).findAny().get();
     }
 
     public Chat getIndividualChatWithUserByUserName(final String username) {
@@ -181,9 +141,8 @@ public class SkypeController {
         System.out.println("message " + asUTF8(message.asPlaintext()) + " redirected");
     }
 
-    public void sendMessage(final Chat chat, final String message) {
-
-    }
+//    public void sendMessage(final Chat chat, final String message) {
+//    }
 
     public List<User> getUsers() {
         return getAllIndividualChats().stream()
