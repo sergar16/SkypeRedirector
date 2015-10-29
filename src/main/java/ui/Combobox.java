@@ -8,6 +8,7 @@ import javax.swing.*;
 /**
  * Created by Serhii on 10/26/2015.
  */
+@Deprecated
 public class Combobox {
     public static JComboBox generateBox() {
         final JComboBox bx = new JComboBox();
