@@ -26,6 +26,11 @@ import java.util.stream.IntStream;
 public class ComboCellInsetsDemo {
     private static ComboCellInsetsDemo instance = null;
 
+    private final static int WINDOW_WIDTH= 400;
+    private final static int WINDOW_HEIGHT=500;
+    protected final static int COMBOBOX_WIDTH=150;
+    private final static int CHECKBOX_COLUMN_WIDTH=40;
+    private final static int ROW_HEIGHT=40;
 
     public static ComboCellInsetsDemo getInstance() {
         if (instance == null) {
@@ -37,9 +42,9 @@ public class ComboCellInsetsDemo {
     JTable table;
 
     public JComponent makeUI() {
-        String[] columnNames = {"From", "To"};
+        String[] columnNames = {"From", "To", "Double Direction"};
         Object[][] data = {
-                {"", ""}
+                {"", "", false}
         };
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
@@ -48,20 +53,27 @@ public class ComboCellInsetsDemo {
             }
         };
         table = new JTable(model);
-        table.setRowHeight(40);
+        table.setRowHeight(ROW_HEIGHT);
         table.setAutoCreateRowSorter(true);
         TableColumn columnFrom = table.getColumnModel().getColumn(0);
         TableColumn columnTo = table.getColumnModel().getColumn(1);
+        TableColumn columnDD = table.getColumnModel().getColumn(2);
         columnFrom.setCellRenderer(new ComboBoxCellRenderer());
         columnFrom.setCellEditor(new ComboBoxCellEditor());
+
         columnTo.setCellRenderer(new ComboBoxCellRenderer());
         columnTo.setCellEditor(new ComboBoxCellEditor());
+
+        columnDD.setWidth(CHECKBOX_COLUMN_WIDTH);
+        columnDD.setCellRenderer(new CheckboxCellRenderer());
+        columnDD.setCellEditor(new CheckBoxCellEditor());
+
         return new JScrollPane(table);
     }
 
     public void addRow() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.addRow(new Object[]{"", ""});
+        model.addRow(new Object[]{"", "", false});
     }
 
     public void deleteSelectedRows() {
@@ -74,7 +86,8 @@ public class ComboCellInsetsDemo {
         for (int i = 0; i < table.getRowCount(); i++) {
             final String from = table.getValueAt(i, 0).toString();
             final String to = table.getValueAt(i, 1).toString();
-            redirectRecordArrayList.add(new RedirectRecord(from, to));
+            final boolean dd=(Boolean)table.getValueAt(i, 2);
+            redirectRecordArrayList.add(new RedirectRecord(from,to,dd));
         }
         return redirectRecordArrayList;
     }
@@ -85,13 +98,15 @@ public class ComboCellInsetsDemo {
         for (int i = 0; i < redirectRecords.size(); i++) {
             table.setValueAt(redirectRecords.get(i).from, i, 0);
             table.setValueAt(redirectRecords.get(i).to, i, 1);
+            table.setValueAt(redirectRecords.get(i).doubleDirection, i, 2);
+
         }
         ((DefaultTableModel) table.getModel()).fireTableDataChanged();
     }
 
     public void prepareBeforeLoading(int capacity) {
         DefaultTableModel defaultTableModel = (DefaultTableModel) table.getModel();
-        IntStream.range(0, defaultTableModel.getRowCount() - 1).forEach(defaultTableModel::removeRow);
+        IntStream.range(0, defaultTableModel.getRowCount() - 1).forEach(rowIndex-> defaultTableModel.removeRow(rowIndex+1));
         for (int i = 0; i < capacity - 1; i++) defaultTableModel.addRow(new Object[]{"", ""});
     }
 
@@ -108,7 +123,7 @@ public class ComboCellInsetsDemo {
         JFrame f = new JFrame();
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.getContentPane().add(ComboCellInsetsDemo.getInstance().makeUI());
-        f.setSize(320, 240);
+        f.setSize(WINDOW_HEIGHT, WINDOW_WIDTH);
         f.setLocationRelativeTo(null);
         f.setJMenuBar(MenuBar.getMenuBar());
         f.setVisible(true);
@@ -134,7 +149,7 @@ class ComboBoxPanel extends JPanel {
         @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
-            return new Dimension(150, d.height);
+            return new Dimension(ComboCellInsetsDemo.COMBOBOX_WIDTH, d.height);
         }
     };
 
@@ -164,6 +179,17 @@ class ComboBoxPanel extends JPanel {
     }
 }
 
+class CheckBoxPanel extends JPanel {
+    final protected JCheckBox checkBox = new JCheckBox();
+
+    public CheckBoxPanel() {
+        super();
+        setOpaque(true);
+        add(checkBox);
+    }
+}
+
+
 class ComboBoxCellRenderer extends ComboBoxPanel
         implements TableCellRenderer {
     public ComboBoxCellRenderer() {
@@ -180,6 +206,24 @@ class ComboBoxCellRenderer extends ComboBoxPanel
         if (value != null) {
             comboBox.setSelectedItem(value);
         }
+        return this;
+    }
+}
+
+class CheckboxCellRenderer extends CheckBoxPanel
+        implements TableCellRenderer {
+    public CheckboxCellRenderer() {
+        super();
+        setName("Table.cellRenderer");
+    }
+
+    @Override
+    public Component getTableCellRendererComponent(
+            JTable table, Object value, boolean isSelected,
+            boolean hasFocus, int row, int column) {
+        setBackground(isSelected ? table.getSelectionBackground()
+                : table.getBackground());
+      checkBox.setSelected(Boolean.parseBoolean(value.toString()));
         return this;
     }
 }
