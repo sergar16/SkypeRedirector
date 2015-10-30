@@ -55,7 +55,7 @@ public class MenuBar {
 
         menu.add(menuItem);
         menuItem = new JMenuItem("Delete Row(s)");
-        menuItem.addActionListener(e -> ComboCellInsetsDemo.getInstance().deleteSelectedRows());
+        menuItem.addActionListener(e -> ComboCellInsetsDemo.getInstance().removeSelectedRows());
         menu.add(menuItem);
         menuBar.add(menu);
         return menuBar;

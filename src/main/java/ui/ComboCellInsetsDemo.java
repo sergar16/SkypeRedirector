@@ -26,11 +26,11 @@ import java.util.stream.IntStream;
 public class ComboCellInsetsDemo {
     private static ComboCellInsetsDemo instance = null;
 
-    private final static int WINDOW_WIDTH= 400;
-    private final static int WINDOW_HEIGHT=500;
-    protected final static int COMBOBOX_WIDTH=150;
-    private final static int CHECKBOX_COLUMN_WIDTH=40;
-    private final static int ROW_HEIGHT=40;
+    private final static int WINDOW_WIDTH = 400;
+    private final static int WINDOW_HEIGHT = 500;
+    protected final static int COMBOBOX_WIDTH = 150;
+    private final static int CHECKBOX_COLUMN_WIDTH = 40;
+    private final static int ROW_HEIGHT = 40;
 
     public static ComboCellInsetsDemo getInstance() {
         if (instance == null) {
@@ -76,9 +76,12 @@ public class ComboCellInsetsDemo {
         model.addRow(new Object[]{"", "", false});
     }
 
-    public void deleteSelectedRows() {
-        DefaultTableModel defaultTableModel = (DefaultTableModel) table.getModel();
-        Arrays.stream(table.getSelectedRows()).map(index -> index - 1).forEach(defaultTableModel::removeRow);
+    public void removeSelectedRows() {
+        DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+        int[] rows = table.getSelectedRows();
+        for(int i=0;i<rows.length;i++){
+            model.removeRow(rows[i]-i);
+        }
     }
 
     public ArrayList<RedirectRecord> getDataTable() {
@@ -86,8 +89,8 @@ public class ComboCellInsetsDemo {
         for (int i = 0; i < table.getRowCount(); i++) {
             final String from = table.getValueAt(i, 0).toString();
             final String to = table.getValueAt(i, 1).toString();
-            final boolean dd=(Boolean)table.getValueAt(i, 2);
-            redirectRecordArrayList.add(new RedirectRecord(from,to,dd));
+            final boolean dd = (Boolean) table.getValueAt(i, 2);
+            redirectRecordArrayList.add(new RedirectRecord(from, to, dd));
         }
         return redirectRecordArrayList;
     }
@@ -99,15 +102,15 @@ public class ComboCellInsetsDemo {
             table.setValueAt(redirectRecords.get(i).from, i, 0);
             table.setValueAt(redirectRecords.get(i).to, i, 1);
             table.setValueAt(redirectRecords.get(i).doubleDirection, i, 2);
-
         }
         ((DefaultTableModel) table.getModel()).fireTableDataChanged();
     }
 
     public void prepareBeforeLoading(int capacity) {
         DefaultTableModel defaultTableModel = (DefaultTableModel) table.getModel();
-        IntStream.range(0, defaultTableModel.getRowCount() - 1).forEach(rowIndex-> defaultTableModel.removeRow(rowIndex+1));
-        for (int i = 0; i < capacity - 1; i++) defaultTableModel.addRow(new Object[]{"", ""});
+        //remove all rows
+        IntStream.range(0, defaultTableModel.getRowCount() - 1).forEach(rowIndex -> defaultTableModel.removeRow(0));
+        for (int i = 0; i < capacity - 1; i++) addRow();
     }
 
     public static void main(String[] args) {
@@ -223,7 +226,7 @@ class CheckboxCellRenderer extends CheckBoxPanel
             boolean hasFocus, int row, int column) {
         setBackground(isSelected ? table.getSelectionBackground()
                 : table.getBackground());
-      checkBox.setSelected(Boolean.parseBoolean(value.toString()));
+        checkBox.setSelected(Boolean.parseBoolean(value.toString()));
         return this;
     }
 }
