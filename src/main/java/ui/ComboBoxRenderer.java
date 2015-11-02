@@ -1,7 +1,7 @@
-package model;
+package ui;
 
 /**
  * Created by Serhii on 10/30/2015.
  */
-public interface ComboboxItem {
+public class ComboBoxRenderer {
 }

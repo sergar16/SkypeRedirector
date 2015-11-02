@@ -42,6 +42,18 @@
             <artifactId>simpleslackapi</artifactId>
             <version>0.4.6</version>
         </dependency>
+      <!--logging log4j-->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <!--for Encoder-->
+        <dependency>
+            <groupId>com.googlecode.juniversalchardet</groupId>
+            <artifactId>juniversalchardet</artifactId>
+            <version>1.0.3</version>
+        </dependency>
 
     </dependencies>
 
@@ -52,7 +64,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ui.LoginForm</mainClass>
+                            <!--<mainClass>ui.LoginForm</mainClass>-->
+                            <mainClass>console.Runner</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

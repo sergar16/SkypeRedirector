@@ -1,7 +1,7 @@
-package model;
+package utils;
 
 /**
  * Created by Serhii on 10/30/2015.
  */
-public interface ComboboxItem {
+public class Icon {
 }
