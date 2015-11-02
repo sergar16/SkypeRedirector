@@ -52,7 +52,7 @@ public class LoginForm extends JFrame {
 
     }
 
-    private  void doLogin() {
+    private   void doLogin() {
         try {
             SkypeController skypeController = SkypeController.getInstance();
             skypeController.signIn(userText.getText(), passwordText.getText());

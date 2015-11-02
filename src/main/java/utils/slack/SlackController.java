@@ -18,7 +18,10 @@ import java.util.Collection;
 public class SlackController {
     private static SlackSession session;
     private String authorisationTolen;
-
+  static {
+      try{
+        directConnect("xoxp-2787111044-3759195074-12631784853-282d3d9889");}catch (IOException ioe){}
+    }
     public static void directConnect(final String authorisationTolen) throws IOException {
         session = SlackSessionFactory.
                 createWebSocketSlackSession(authorisationTolen);
@@ -46,13 +49,13 @@ public class SlackController {
     public static Collection<SlackChannel> getAllChannels() {
         return session.getChannels();
     }
+    public static SlackChannel [] getAllChannelsArray() {
+        return (SlackChannel [])session.getChannels().toArray();
+    }
 
     public static Collection<SlackUser> getAllUsers() {
         return session.getUsers();
     }
 
-    public static void main(String[] args)throws IOException{
-        directConnect("");
-        addMessageListener();
-    }
+
 }

@@ -6,7 +6,7 @@ import skype.SkypeController;
 /**
  * Created by Serhii on 10/26/2015.
  */
-public class SkypeComboboxItem {
+public class SkypeComboboxItem implements ComboboxItem {
     private String name;
     private Chat value;
     private static SkypeController skypeController = SkypeController.getInstance();
@@ -42,6 +42,11 @@ public class SkypeComboboxItem {
 
     public static void setSkypeController(SkypeController skypeController) {
         SkypeComboboxItem.skypeController = skypeController;
+    }
+
+    @Override
+    public Programs getProgram(){
+        return Programs.SKYPE;
     }
 
     @Override

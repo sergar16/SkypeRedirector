@@ -20,7 +20,6 @@ public class MenuBar {
 
 //Create the menu bar.
         menuBar = new JMenuBar();
-
 //Build the first menu.
         menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_A);
@@ -31,7 +30,7 @@ public class MenuBar {
 //a group of JMenuItems
         menuItem = new JMenuItem("Open");
         menuItem.setMnemonic(KeyEvent.VK_D);
-        menuItem.addActionListener(e -> ComboCellInsetsDemo.getInstance().setDataTable(IO.openFile()));
+        menuItem.addActionListener(e -> ComboCellInsetsDemo.getInstance().setDataTable(IO.openFileMenu()));
         menu.add(menuItem);
 
         menuItem = new JMenuItem("Save",
@@ -40,7 +39,7 @@ public class MenuBar {
                 KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription(
                 "Save redirect configuration");
-        menuItem.addActionListener(e -> IO.saveAs());
+        menuItem.addActionListener(e -> IO.saveAsMenu());
         menu.add(menuItem);
 
         menuItem = new JMenuItem("Save as",

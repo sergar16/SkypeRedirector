@@ -2,9 +2,12 @@ package redirect;
 
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.SkypeException;
+import com.samczsun.skype4j.formatting.Message;
+import com.samczsun.skype4j.formatting.Text;
 import model.RedirectRecord;
 import skype.SkypeController;
 import ui.ComboCellInsetsDemo;
+import utils.Encoder;
 
 /**
  * Created by Serhii on 10/26/2015.
@@ -14,8 +17,6 @@ public class Redirector {
 
     public static void redirect(MessageReceivedEvent event) {
         for (RedirectRecord redirectRecord : ComboCellInsetsDemo.getInstance().getDataTable()) {
-            System.out.print(redirectRecord.from);
-            System.out.print(redirectRecord.to);
             if (skypeController.getChatName(event.getChat()).equals(redirectRecord.from)) {
                 //TODO redirect from combobox value
                 if (!(redirectRecord.doubleDirection
@@ -33,8 +34,6 @@ public class Redirector {
 
     public static void redirectBack(MessageReceivedEvent event) {
         for (RedirectRecord redirectRecord : ComboCellInsetsDemo.getInstance().getDataTable()) {
-            System.out.print(redirectRecord.from);
-            System.out.print(redirectRecord.to);
             if (skypeController.getChatName(event.getChat()).equals(redirectRecord.to)
                     && !event.getMessage().getSender().getUsername().equals(SkypeController.getCurrentUsername())
                     && redirectRecord.doubleDirection) {

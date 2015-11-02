@@ -4,9 +4,11 @@ package ui;
  * Created by Serhii on 10/26/2015.
  */
 
-import model.ComboboxItem;
-import model.RedirectRecord;
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import model.*;
 import skype.SkypeController;
+import utils.ArrayConcat;
+import utils.slack.SlackController;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -21,6 +23,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventObject;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ComboCellInsetsDemo {
@@ -147,8 +150,14 @@ public class ComboCellInsetsDemo {
 
 
 class ComboBoxPanel extends JPanel {
-    private ComboboxItem[] items = SkypeController.getSortedArrayOfGroupAndUsers();
-    final protected JComboBox<ComboboxItem> comboBox = new JComboBox<ComboboxItem>(items) {
+//    private SkypeComboboxItem[] skypeItems = SkypeController.getSortedArrayOfGroupAndUsers();
+//    private SlackComboboxItem[] slackItems= SlackController.getAllChannels().stream()
+//            .map(slackChannel -> new SlackComboboxItem(slackChannel.getName())).toArray(size -> new SlackComboboxItem[size]);
+  //  private ComboboxItem[] items= ArrayConcat.concat(skypeItems,slackItems);
+//========
+
+    final protected JComboBox<ComboboxItem> comboBox = new JComboBox<ComboboxItem>(Chat.getListofAllChats()
+            .stream().filter(value->value!=null).sorted((e1,e2)->e1.toString().compareTo(e2.toString())).toArray(value -> new ComboboxItem[value])) {
         @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
@@ -160,6 +169,7 @@ class ComboBoxPanel extends JPanel {
         super();
         setOpaque(true);
         comboBox.setEditable(true);
+        comboBox.setRenderer(new ComboBoxRenderer());
         comboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
                                                                      @Override
                                                                      public void keyReleased(KeyEvent event) {

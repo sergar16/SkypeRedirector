@@ -9,13 +9,13 @@ import com.samczsun.skype4j.events.Listener;
 import com.samczsun.skype4j.events.chat.message.MessageReceivedEvent;
 import com.samczsun.skype4j.exceptions.SkypeException;
 import com.samczsun.skype4j.formatting.Message;
+import com.samczsun.skype4j.formatting.Text;
 import com.samczsun.skype4j.user.User;
-import model.ComboboxItem;
-import model.RedirectRecord;
+import model.SkypeComboboxItem;
 import redirect.Redirector;
 import utils.Encoder;
+import utils.OS;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -102,14 +102,14 @@ public class SkypeController {
     private String getIndividualChatName(final Chat chat) {
         if (chat instanceof IndividualChat) {
             IndividualChat individualChat = (IndividualChat) chat;
-              return  ((User) chat.getAllUsers().toArray()[0]).getUsername().equals(getCurrentUsername())
-                        ? ((User) chat.getAllUsers().toArray()[1]).getUsername() : ((User) chat.getAllUsers().toArray()[0]).getUsername();
-            }
+            return ((User) chat.getAllUsers().toArray()[0]).getUsername().equals(getCurrentUsername())
+                    ? ((User) chat.getAllUsers().toArray()[1]).getUsername() : ((User) chat.getAllUsers().toArray()[0]).getUsername();
+        }
         return null;
     }
 
     public Chat findChatByName(final String name) {
-       return getAllChats().stream().filter(chat -> getChatName(chat).equals(name)).findAny().get();
+        return getAllChats().stream().filter(chat -> getChatName(chat).equals(name)).findAny().get();
     }
 
     public Chat findGroupChatByTopic(final String topic) {
@@ -125,23 +125,26 @@ public class SkypeController {
         return getAllChats().stream().filter(chat -> chat instanceof IndividualChat).collect(Collectors.toList());
     }
 
-    public static ArrayList<ComboboxItem> getSortedListOfGroupAndUsers() {
-        Comparator<ComboboxItem> byName = (e1, e2) ->
+    public static ArrayList<SkypeComboboxItem> getSortedListOfGroupAndUsers() {
+        Comparator<SkypeComboboxItem> byName = (e1, e2) ->
                 e1.toString().compareTo(e2.toString());
         return getInstance().getAllChats().stream()
-                .map(chat -> new ComboboxItem(chat))
+                .map(chat -> new SkypeComboboxItem(chat))
                 .distinct()
                 .sorted(byName).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public static ComboboxItem[] getSortedArrayOfGroupAndUsers() {
-        return getSortedListOfGroupAndUsers().stream().toArray(chat -> new ComboboxItem[chat]);
+    public static SkypeComboboxItem[] getSortedArrayOfGroupAndUsers() {
+        return getSortedListOfGroupAndUsers().stream().toArray(chat -> new SkypeComboboxItem[chat]);
     }
 
 
     public void redirectMessage(final Chat chat, final Message message) throws SkypeException {
-        chat.sendMessage(message);
-        System.out.println("message " + asUTF8(message.asPlaintext()) + " redirected");
+        if (OS.isWindows()) {
+            Message encodeMessage = Message.create().with(Text.plain(Encoder.encode(message.asPlaintext())));
+            chat.sendMessage(encodeMessage);
+        } else
+            chat.sendMessage(message);
     }
 
 //    public void sendMessage(final Chat chat, final String message) {
